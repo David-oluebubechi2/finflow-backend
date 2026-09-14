@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AccountKind {
+  checking
+  savings
+  credit
+  investing
+}
+
+enum TxKind {
+  in
+  out
+}
+
+enum TxStatus {
+  Completed
+  Pending
+  Failed
+}
+
+model User {
+  id       String   @id @default(cuid())
+  email    String   @unique
+  name     String
+  password String
+  plan     String   @default("starter")
+  createdAt DateTime @default(now())
+
+  accounts     Account[]
+  budgets      Budget[]
+  transactions Transaction[]
+}
+
+model Account {
+  id      Int        @id @default(autoincrement())
+  name    String
+  kind    AccountKind
+  number  String
+  balance Float
+  change  Float      @default(0)
+  accent  String
+  usage   Int?
+  userId  String
+  user    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Budget {
+  id       Int    @id @default(autoincrement())
+  category String
+  icon     String
+  color    String
+  spent    Float  @default(0)
+  limit    Float
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  merchant    String
+  category    String
+  icon        String
+  color       String
+  date        String
+  accountName String
+  amount      Float
+  kind        TxKind
+  status      TxStatus @default(Completed)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
