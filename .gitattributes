@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.sql text working-tree-encoding=UTF-8
+*.ts text working-tree-encoding=UTF-8
+*.json text working-tree-encoding=UTF-8
+*.toml text working-tree-encoding=UTF-8
+*.prisma text working-tree-encoding=UTF-8
+Dockerfile text working-tree-encoding=UTF-8
